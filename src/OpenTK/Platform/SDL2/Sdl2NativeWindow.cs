@@ -29,7 +29,7 @@ using System.Diagnostics;
 #if !MINIMAL
 using System.Drawing;
 #endif
-#if ANDROID || IPHONE || MINIMAL
+#if ANDROID || IPHONE || TIZEN || MINIMAL
 using OpenTK.Minimal;
 #else
 using System.Drawing.Imaging;

@@ -82,7 +82,7 @@ namespace OpenTK.Rewrite
 #if NET_CORE
             var defaultResolver = new DefaultAssemblyResolver();
             defaultResolver.AddSearchDirectory(Path.GetDirectoryName(Options.TargetAssembly));
-            read_params.AssemblyResolver = defaultResolver;           
+            read_params.AssemblyResolver = defaultResolver;
 #else
             read_params.AssemblyResolver = new OpenTKAssemblyResolver();
 #endif
