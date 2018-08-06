@@ -29,6 +29,13 @@ namespace OpenTK.Rewrite
     // with the s IL instructions.
     internal class Program
     {
+#if NET_CORE
+        private static readonly String CoreLibName = "netstandard";
+#else
+        private static readonly String CoreLibName = "mscorlib";
+#endif
+
+
         private static Options Options;
 
         private static void Main(string[] args)
@@ -72,11 +79,18 @@ namespace OpenTK.Rewrite
             var read_params = new ReaderParameters();
             var write_params = new WriterParameters();
 
+#if NET_CORE
+            var defaultResolver = new DefaultAssemblyResolver();
+            defaultResolver.AddSearchDirectory(Path.GetDirectoryName(Options.TargetAssembly));
+            read_params.AssemblyResolver = defaultResolver;           
+#else
             read_params.AssemblyResolver = new OpenTKAssemblyResolver();
+#endif
             read_params.ReadSymbols = true;
             read_params.ReadWrite = true;
             write_params.WriteSymbols = true;
 
+#if !NET_CORE
             if (!String.IsNullOrEmpty(Options.StrongNameKey) && File.Exists(Options.StrongNameKey))
             {
                 string absoluteKeyFilePath = Path.GetFullPath(Options.StrongNameKey);
@@ -91,7 +105,7 @@ namespace OpenTK.Rewrite
             {
                 Console.Error.WriteLine("No keyfile specified or keyfile missing.");
             }
-
+#endif
             // Load assembly and process all modules
             try
             {
@@ -107,7 +121,7 @@ namespace OpenTK.Rewrite
                                 try
                                 {
                                     var resolved = module.AssemblyResolver.Resolve(reference);
-                                    if (reference.Name == "mscorlib")
+                                    if (reference.Name == CoreLibName)
                                     {
                                         mscorlib = resolved;
                                     }
@@ -121,15 +135,15 @@ namespace OpenTK.Rewrite
 
                         if (mscorlib == null)
                         {
-                            Console.Error.WriteLine("Failed to locate mscorlib");
+                            Console.Error.WriteLine($"Failed to locate {CoreLibName}");
                             return;
                         }
-                        TypeMarshal = mscorlib.MainModule.GetType("System.Runtime.InteropServices.Marshal");
-                        TypeVoid = mscorlib.MainModule.GetType("System.Void");
-                        TypeIntPtr = mscorlib.MainModule.GetType("System.IntPtr");
-                        TypeInt32 = mscorlib.MainModule.GetType("System.Int32");
+                        TypeMarshal = GetType(mscorlib.MainModule, "System.Runtime.InteropServices.Marshal");
+                        TypeVoid = GetType(mscorlib.MainModule, "System.Void");
+                        TypeIntPtr = GetType(mscorlib.MainModule, "System.IntPtr");
+                        TypeInt32 = GetType(mscorlib.MainModule, "System.Int32");
 
-                        TypeBindingsBase = assembly.Modules.Select(m => m.GetType("OpenTK.BindingsBase")).First();
+                        TypeBindingsBase = assembly.Modules.Select(m => GetType(m, "OpenTK.BindingsBase")).First();
 
                         foreach (var module in assembly.Modules)
                         {
@@ -175,9 +189,25 @@ namespace OpenTK.Rewrite
                 var rewritten_constructor = type.GetConstructors().First();
                 var rewritten = new CustomAttribute(rewritten_constructor);
                 rewritten.ConstructorArguments.Add(new CustomAttributeArgument(
-                    type.Module.ImportReference(mscorlib.MainModule.GetType("System.Boolean")), true));
+                    type.Module.ImportReference(GetType(mscorlib.MainModule, "System.Boolean")), true));
                 type.Module.Assembly.CustomAttributes.Add(rewritten);
             }
+        }
+
+        private static TypeDefinition GetType(ModuleDefinition module, string ns, string name)
+        {
+            return GetType(module, ns + "." + name);
+        }
+
+        private static TypeDefinition GetType(ModuleDefinition module, string fullName)
+        {
+            TypeDefinition type = module.GetType(fullName);
+            if (type == null && module.HasExportedTypes)
+            {
+                var exportedType = module.ExportedTypes.Where(t => t.FullName == fullName && t.IsForwarder).FirstOrDefault();
+                type = exportedType.Resolve();
+            }
+            return type;
         }
 
         private static int GetSlot(MethodDefinition signature)
@@ -371,7 +401,7 @@ namespace OpenTK.Rewrite
                     module == "OpenTK.Graphics.ES20" ||
                     module == "OpenTK.Graphics.ES30")
                 {
-                    var errorHelperType = wrapper.Module.GetType(module, "ErrorHelper");
+                    var errorHelperType = GetType(wrapper.Module, module, "ErrorHelper");
 
                     if (errorHelperType != null)
                     {
@@ -499,7 +529,7 @@ namespace OpenTK.Rewrite
                     // String return-type wrapper
                     // return new string((sbyte*)((void*)GetString()));
 
-                    var intptr_to_voidpointer = wrapper.Module.ImportReference(mscorlib.MainModule.GetType("System.IntPtr").GetMethods()
+                    var intptr_to_voidpointer = wrapper.Module.ImportReference(GetType(mscorlib.MainModule, "System.IntPtr").GetMethods()
                         .First(m =>
                     {
                         return
@@ -507,7 +537,7 @@ namespace OpenTK.Rewrite
                         m.ReturnType.Name == "Void*";
                     }));
 
-                    var string_constructor = wrapper.Module.ImportReference(mscorlib.MainModule.GetType("System.String").GetConstructors()
+                    var string_constructor = wrapper.Module.ImportReference(GetType(mscorlib.MainModule, "System.String").GetConstructors()
                         .First(m =>
                     {
                         var p = m.Parameters;
@@ -991,7 +1021,7 @@ namespace OpenTK.Rewrite
                         else
                         {
                             var get_length = method.Module.ImportReference(
-                                mscorlib.MainModule.GetType("System.Array").Methods.First(m => m.Name == "get_Length"));
+                                GetType(mscorlib.MainModule, "System.Array").Methods.First(m => m.Name == "get_Length"));
                             il.Emit(OpCodes.Callvirt, get_length);
                         }
                         il.Emit(OpCodes.Brtrue, pin);
