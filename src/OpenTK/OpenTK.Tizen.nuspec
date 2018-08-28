@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
+    <id>OpenTK.Tizen</id>
+    <version>$version$</version>
     <authors>The Open Toolkit Teams</authors>
     <owners>Samsung Electronics</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -19,7 +21,7 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="$targetdir$\ref\OpenTK.dll"  target="ref\tizen50" />
-    <file src="$targetdir$\OpenTK.xml"  target="ref\tizen50" />
+    <file src="bin\$configuration$\netstandard2.0\ref\OpenTK.dll" target="ref\tizen50" />
+    <file src="bin\$configuration$\netstandard2.0\OpenTK.xml" target="ref\tizen50" />
   </files>
 </package>

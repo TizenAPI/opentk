@@ -9,12 +9,21 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <EnableDefaultItems>false</EnableDefaultItems>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
     <DefineConstants>TIZEN;OPENGLES;SDL2;__MOBILE__</DefineConstants>
     <NoWarn>$(NoWarn);CS3021</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
     <TizenNETVersion>5.0.0.14428</TizenNETVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <NuspecFile>OpenTK.Tizen.nuspec</NuspecFile>
+    <NuspecBasePath>$(MSBuildThisFileDirectory)</NuspecBasePath>
+    <NuspecProperties>version=$(Version);configuration=$(Configuration);fxversion=$(TizenNETVersion)</NuspecProperties>
   </PropertyGroup>
 
   <ItemGroup>
@@ -63,26 +72,8 @@
     <Compile Include="Platform/Tizen/*.cs" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <PackDependsOn>
-      $(PackDependsOn);
-      _PreparePackForTizen
-    </PackDependsOn>
-  </PropertyGroup>
-
-  <Target Name="_PreparePackForTizen">
-    <PropertyGroup>
-      <IncludeBuildOutput>false</IncludeBuildOutput>
-      <NoPackageAnalysis>true</NoPackageAnalysis>
-      <NuspecBasePath>$(MSBuildThisFileDirectory)</NuspecBasePath>
-      <NuspecProperties>fxversion=$(TizenNETVersion);targetdir=$(OutDir)</NuspecProperties>
-      <NuspecFile>OpenTK.Tizen.nuspec</NuspecFile>
-    </PropertyGroup>
-  </Target>
-
   <!-- Rewrite OpenTK.dll after building -->
-  <Target Name="_AfterBuild" AfterTargets="Build"
-          Condition="'$(IsDummyBuild)' != 'True'">
+  <Target Name="_AfterBuild" AfterTargets="Build">
     <!-- Copy dependent files to output dir -->
     <ItemGroup>
       <_DependentFilesToCopy Include="@(ResolvedCompileFileDefinitions)" Condition="'%(NuGetPackageId)' == 'Tizen.NET.API5'" />
