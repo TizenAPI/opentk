@@ -3,8 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>OpenTK</AssemblyName>
-    <PackageId>OpenTK.Tizen</PackageId>
-    <Version>3.0.0</Version>
+    <AssemblyVersion>3.0.0</AssemblyVersion>
+    <PackageVersion>3.0.1</PackageVersion>
     <Deterministic>true</Deterministic>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <EnableDefaultItems>false</EnableDefaultItems>
@@ -23,7 +23,7 @@
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <NuspecFile>OpenTK.Tizen.nuspec</NuspecFile>
     <NuspecBasePath>$(MSBuildThisFileDirectory)</NuspecBasePath>
-    <NuspecProperties>version=$(Version);configuration=$(Configuration);fxversion=$(TizenNETVersion)</NuspecProperties>
+    <NuspecProperties>version=$(PackageVersion);configuration=$(Configuration);fxversion=$(TizenNETVersion)</NuspecProperties>
   </PropertyGroup>
 
   <ItemGroup>
