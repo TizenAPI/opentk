@@ -37,9 +37,11 @@ namespace Bind
 
         private static void Main(string[] arguments)
         {
+            #if !NET_CORE
             Debug.Listeners.Clear();
             Debug.Listeners.Add(new TextWriterTraceListener(Console.Out));
             Debug.AutoFlush = true;
+            #endif
             Trace.Listeners.Clear();
             Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
             Trace.AutoFlush = true;

@@ -95,6 +95,7 @@ namespace OpenTK.Platform
                 Embedded = new iPhoneOS.iPhoneFactory();
             }
 #else
+#if !TIZEN
             else if (Egl.Egl.IsSupported)
             {
                 if (Configuration.RunningOnLinux)
@@ -133,6 +134,7 @@ namespace OpenTK.Platform
                 Angle = new Egl.EglAnglePlatformFactory(Embedded);
 #endif
             }
+#endif
 #endif
             else
             {

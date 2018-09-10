@@ -1,4 +1,7 @@
-﻿#if ANDROID || IPHONE || MINIMAL
+﻿#if ANDROID || IPHONE || TIZEN || MINIMAL
+
+#pragma warning disable 1591
+
 using System;
 
 #if !MINIMAL
@@ -11,7 +14,7 @@ namespace OpenTK
     // minimal targets (e.g. MonoTouch).
     // Note: the "overriden" classes must not be fully qualified for this to work!
 
-    #if MINIMAL
+#if MINIMAL
 
     // System.Diagnostics.Debug
     static class Debug
@@ -83,8 +86,9 @@ namespace OpenTK
 #endif
     }
 
-    #endif
+#endif
 
+#if !TIZEN
     // System.Xml.XmlIgnoreAttribute
     internal class XmlIgnoreAttribute : Attribute
     {
@@ -622,6 +626,7 @@ namespace OpenTK
                 Size.Equals(other.Size);
         }
     }
+#endif
 
     public sealed class Icon : IDisposable
     {
@@ -712,6 +717,7 @@ namespace OpenTK
         }
     }
 
+#if !TIZEN
     /// <summary>
     /// Represents a color with 4 8bit components (R, G, B, A).
     /// </summary>
@@ -1549,6 +1555,8 @@ namespace OpenTK
         }
     }
 
+#endif
+
     internal sealed class BitmapData
     {
         internal BitmapData(int width, int height, int stride)
@@ -1581,10 +1589,12 @@ namespace OpenTK
         Png
     }
 
+#if !TIZEN
     internal sealed class SystemEvents
     {
         public static event EventHandler DisplaySettingsChanged;
     }
+#endif
 }
 
 // Need a different namespace to avoid clash with OpenTK.Graphics.

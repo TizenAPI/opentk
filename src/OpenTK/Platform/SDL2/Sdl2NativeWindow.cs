@@ -29,7 +29,7 @@ using System.Diagnostics;
 #if !MINIMAL
 using System.Drawing;
 #endif
-#if ANDROID || IPHONE || MINIMAL
+#if ANDROID || IPHONE || TIZEN || MINIMAL
 using OpenTK.Minimal;
 #else
 using System.Drawing.Imaging;
@@ -945,7 +945,7 @@ namespace OpenTK.Platform.SDL2
             {
                 lock (sync)
                 {
-                    if (Exists)
+                    if (Exists && value != is_cursor_visible)
                     {
                         GrabCursor(!value);
                         is_cursor_visible = value;
