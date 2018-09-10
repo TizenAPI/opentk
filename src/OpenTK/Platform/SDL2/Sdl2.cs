@@ -37,15 +37,15 @@ namespace OpenTK.Platform.SDL2
 
     internal partial class SDL
     {
-        #if ANDROID
+#if ANDROID
         const string lib = "libSDL2.so";
-        #elif IPHONE
+#elif IPHONE
         const string lib = "__Internal";
-        #elif TIZEN
+#elif TIZEN
         private const string lib = "libSDL2-2.0.so.0";
-        #else
+#else
         private const string lib = "SDL2.dll";
-        #endif
+#endif
 
         public readonly static object Sync = new object();
         private static Nullable<Version> version;
@@ -111,14 +111,6 @@ namespace OpenTK.Platform.SDL2
         [SuppressUnmanagedCodeSecurity]
         [DllImport(lib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_CreateWindow", ExactSpelling = true)]
         public static extern IntPtr CreateWindow(string title, int x, int y, int w, int h, WindowFlags flags);
-
-        [SuppressUnmanagedCodeSecurity]
-        [DllImport(lib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetMainReady", ExactSpelling = true)]
-        public static extern void SetMainReady();
-
-        [SuppressUnmanagedCodeSecurity]
-        [DllImport(lib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetHint", ExactSpelling = true)]
-        public static extern IntPtr SetHint(string name, string value);
 
         [SuppressUnmanagedCodeSecurity]
         [DllImport(lib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_CreateWindowFrom", ExactSpelling = true)]
@@ -680,8 +672,23 @@ namespace OpenTK.Platform.SDL2
     {
         FIRSTEVENT = 0,
         QUIT = 0x100,
+        APPTERMINATING,
+        APPLOWMEMORY,
+        APPWILLENTERBACKGROUND,
+        APPDIDENTERBACKGROUND,
+        APPWILLENTERFOREGROUND,
+        APPDIDENTERFOREGROUND,
+#if TIZEN
+        APPCONTROL,
+        APPLOWBATTERY,
+        APPLANGUAGECHANGED,
+        APPREGIONCHANGED,
+#endif
         WINDOWEVENT = 0x200,
         SYSWMEVENT,
+#if TIZEN
+        ROTATEEVENT,
+#endif
         KEYDOWN = 0x300,
         KEYUP,
         TEXTEDITING,
@@ -1437,6 +1444,10 @@ namespace OpenTK.Platform.SDL2
         public ControllerDeviceEvent ControllerDevice;
         [FieldOffset(0)]
         public DropEvent Drop;
+#if TIZEN
+        [FieldOffset(0)]
+        public UserEvent User;
+#endif
 #if false
         [FieldOffset(0)]
         public QuitEvent quit;
@@ -1459,6 +1470,18 @@ namespace OpenTK.Platform.SDL2
         [FieldOffset(0)]
         private unsafe fixed byte reserved[128];
     }
+
+#if TIZEN
+    internal struct UserEvent
+    {
+        public UInt32 Type;
+        public UInt32 Timestamp;
+        public UInt32 WindowID;
+        public Int32 code;
+        public IntPtr data1;
+        public IntPtr data2;
+    }
+#endif
 
     [StructLayout(LayoutKind.Explicit)]
     internal struct GameControllerButtonBind
