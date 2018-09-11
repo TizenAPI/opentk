@@ -29,4 +29,6 @@
 *.ogg binary
 *.zip binary
 *.pdf binary
+*.nupkg binary
+
 
