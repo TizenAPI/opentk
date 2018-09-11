@@ -188,10 +188,6 @@ namespace OpenTK
                     else
                     {
                         // Attempt to initialize SDL2.
-                        #if TIZEN
-                        Platform.SDL2.SDL.SetMainReady();
-                        #endif
-
                         var flags =
                             Platform.SDL2.SystemFlags.VIDEO |
                             Platform.SDL2.SystemFlags.TIMER;
