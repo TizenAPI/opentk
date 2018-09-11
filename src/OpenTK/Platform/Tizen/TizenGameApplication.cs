@@ -42,6 +42,12 @@ namespace OpenTK.Platform.Tizen
         public IGameWindow Window => window;
 
         /// <summary>
+        /// Gets the Window Attributes instance that include the window attributes could be changed by the user.
+        /// </summary>
+        /// <since_tizen> 5 </since_tizen>
+        public ITizenWindowAttributes WindowAttributes => window;
+
+        /// <summary>
         /// The major version for the OpenGL GraphicsContext.
         /// </summary>
         public int GLMajor { get; set; } = 2;

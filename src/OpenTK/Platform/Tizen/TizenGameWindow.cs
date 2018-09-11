@@ -28,7 +28,7 @@ using OpenTK.Graphics;
 
 namespace OpenTK.Platform.Tizen
 {
-    internal class TizenGameWindow : GameWindow
+    internal class TizenGameWindow : GameWindow, ITizenWindowAttributes
     {
         public TizenGameWindow()
             : this(GraphicsMode.Default, DisplayDevice.Default, 2, 0)
@@ -43,6 +43,34 @@ namespace OpenTK.Platform.Tizen
         }
 
         public bool Paused { get; set; }
+
+        public bool IsFocusAllowed
+        {
+            get
+            {
+                return SDL2.SDL.SDL_Tizen_GetWindowAcceptFocus(WindowInfo.Handle);
+            }
+
+            set
+            {
+                SDL2.SDL.SDL_Tizen_SetWindowAcceptFocus(WindowInfo.Handle, value);
+            }
+        }
+
+        public float WindowOpacity
+        {
+            get
+            {
+                float opacity = 0.0f;
+                SDL2.SDL.SDL_GetWindowOpacity(WindowInfo.Handle, out opacity);
+                return opacity;
+            }
+
+            set
+            {
+                SDL2.SDL.SDL_SetWindowOpacity(WindowInfo.Handle, value);
+            }
+        }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
@@ -78,6 +106,11 @@ namespace OpenTK.Platform.Tizen
         internal void RunInternal(double updates_per_second, double frames_per_second)
         {
             base.Run(updates_per_second, frames_per_second);
+        }
+
+        public uint AddAuxiliaryHint(string hint, string value)
+        {
+            return SDL2.SDL.SDL_Tizen_AddAuxiliaryHint(WindowInfo.Handle, hint, value);
         }
     }
 }
