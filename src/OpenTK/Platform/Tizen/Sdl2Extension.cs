@@ -42,5 +42,45 @@ namespace OpenTK.Platform.SDL2
         [SuppressUnmanagedCodeSecurity]
         [DllImport(lib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetHint", ExactSpelling = true)]
         public static extern IntPtr SetHint(string name, string value);
+
+        [SuppressUnmanagedCodeSecurity]
+        [DllImport(lib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_Tizen_GetSupportedAuxiliaryHintCount", ExactSpelling = true)]
+        public static extern uint SDL_Tizen_GetSupportedAuxiliaryHintCount(IntPtr window);
+
+        [SuppressUnmanagedCodeSecurity]
+        [DllImport(lib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_Tizen_GetSupportedAuxiliaryHint", ExactSpelling = true)]
+        public static extern string SDL_Tizen_GetSupportedAuxiliaryHint(IntPtr window, uint index);
+
+        [SuppressUnmanagedCodeSecurity]
+        [DllImport(lib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_Tizen_AddAuxiliaryHint", ExactSpelling = true)]
+        public static extern uint SDL_Tizen_AddAuxiliaryHint(IntPtr window, string hint, string value);
+
+        [SuppressUnmanagedCodeSecurity]
+        [DllImport(lib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_Tizen_RemoveAuxiliaryHint", ExactSpelling = true)]
+        public static extern bool SDL_Tizen_RemoveAuxiliaryHint(IntPtr window, uint id);
+
+        [SuppressUnmanagedCodeSecurity]
+        [DllImport(lib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_Tizen_SetAuxiliaryHint", ExactSpelling = true)]
+        public static extern bool SDL_Tizen_SetAuxiliaryHint(IntPtr window, uint id, string value);
+
+        [SuppressUnmanagedCodeSecurity]
+        [DllImport(lib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_Tizen_GetAuxiliaryHintValue", ExactSpelling = true)]
+        public static extern string SDL_Tizen_GetAuxiliaryHintValue(IntPtr window, uint id);
+
+        [SuppressUnmanagedCodeSecurity]
+        [DllImport(lib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_Tizen_SetWindowAcceptFocus", ExactSpelling = true)]
+        public static extern bool SDL_Tizen_SetWindowAcceptFocus(IntPtr window, bool accept);
+
+        [SuppressUnmanagedCodeSecurity]
+        [DllImport(lib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_Tizen_GetWindowAcceptFocus", ExactSpelling = true)]
+        public static extern bool SDL_Tizen_GetWindowAcceptFocus(IntPtr window);
+
+        [SuppressUnmanagedCodeSecurity]
+        [DllImport(lib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetWindowOpacity", ExactSpelling = true)]
+        public static extern int SDL_SetWindowOpacity(IntPtr window, float opacity);
+
+        [SuppressUnmanagedCodeSecurity]
+        [DllImport(lib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_GetWindowOpacity", ExactSpelling = true)]
+        public static extern int SDL_GetWindowOpacity(IntPtr window, out float opacity);
     }
 }
