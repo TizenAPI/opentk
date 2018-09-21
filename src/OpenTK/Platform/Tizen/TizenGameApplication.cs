@@ -30,7 +30,6 @@ namespace OpenTK.Platform.Tizen
     /// <summary>
     /// Represents an application that have a GameWindow of OpenTK.
     /// </summary>
-    /// <since_tizen> 5 </since_tizen>
     public class TizenGameApplication : CoreUIApplication
     {
         private TizenGameWindow window;
@@ -38,13 +37,11 @@ namespace OpenTK.Platform.Tizen
         /// <summary>
         /// Gets the GameWindow instance that created in OnCreate() method.
         /// </summary>
-        /// <since_tizen> 5 </since_tizen>
         public IGameWindow Window => window;
 
         /// <summary>
         /// Gets the Window Attributes instance that include the window attributes could be changed by the user.
         /// </summary>
-        /// <since_tizen> 5 </since_tizen>
         public ITizenWindowAttributes WindowAttributes => window;
 
         /// <summary>
@@ -65,7 +62,6 @@ namespace OpenTK.Platform.Tizen
         /// <summary>
         /// Initializes the TizenGameApplication class.
         /// </summary>
-        /// <since_tizen> 5 </since_tizen>
         public TizenGameApplication() : base(new TizenGameCoreBackend())
         {
         }
@@ -74,10 +70,8 @@ namespace OpenTK.Platform.Tizen
         /// Overrides this method if you want to handle the behavior when the application is resumed.
         /// If base.OnResume() is not called, the event 'Resumed' will not be emitted.
         /// </summary>
-        /// <since_tizen> 3 </since_tizen>
         protected override void OnResume()
         {
-            window.Paused = false;
             base.OnResume();
         }
 
@@ -85,10 +79,8 @@ namespace OpenTK.Platform.Tizen
         /// Overrides this method if you want to handle the behavior when the application is paused.
         /// If base.OnPause() is not called, the event 'Paused' will not be emitted.
         /// </summary>
-        /// <since_tizen> 3 </since_tizen>
         protected override void OnPause()
         {
-            window.Paused = true;
             base.OnPause();
         }
 
@@ -96,7 +88,6 @@ namespace OpenTK.Platform.Tizen
         /// Runs the UI application's main loop. The GameWindow uses the maximum update rate.
         /// </summary>
         /// <param name="args">Arguments from the commandline.</param>
-        /// <since_tizen> 3 </since_tizen>
         public override void Run(string[] args)
         {
             Run(args, 0.0, 0.0);
@@ -107,7 +98,6 @@ namespace OpenTK.Platform.Tizen
         /// </summary>
         /// <param name="args">Arguments from the commandline.</param>
         /// <param name="updatesPerSecond">The frequency of UpdateFrame events.</param>
-        /// <since_tizen> 5 </since_tizen>
         public void Run(string[] args, double updatesPerSecond)
         {
             Run(args, updatesPerSecond, 0.0);
@@ -119,7 +109,6 @@ namespace OpenTK.Platform.Tizen
         /// <param name="args">Arguments from the commandline.</param>
         /// <param name="updatesPerSecond">The frequency of UpdateFrame events.</param>
         /// <param name="framesPerSecond">The frequency of RenderFrame events.</param>
-        /// <since_tizen> 5 </since_tizen>
         public void Run(string[] args, double updatesPerSecond, double framesPerSecond)
         {
             // Initialize SDL2
@@ -127,11 +116,27 @@ namespace OpenTK.Platform.Tizen
             SDL2.SDL.SetMainReady();
             Toolkit.Init();
 
-            // Set Create Window
-            Backend.AddEventHandler(TizenGameCoreBackend.WindowCreationEventType, () =>
+            // Set Internal Event Handlers
+            Backend.AddEventHandler(TizenGameCoreBackend.InternalCreateEventType, () =>
             {
                 window = new TizenGameWindow(GraphicsMode, DisplayDevice.Default, GLMajor, GLMinor);
             });
+
+            Backend.AddEventHandler(TizenGameCoreBackend.InternalTerminateEventType, () =>
+            {
+                window.Exit();
+            });
+
+            Backend.AddEventHandler(TizenGameCoreBackend.InternalResumeEventType, () =>
+            {
+                window.Paused = false;
+            });
+
+            Backend.AddEventHandler(TizenGameCoreBackend.InternalPauseEventType, () =>
+            {
+                window.Paused = true;
+            });
+
 
             // Configure callbacks for application events
             base.Run(args);
@@ -143,7 +148,6 @@ namespace OpenTK.Platform.Tizen
         /// <summary>
         /// Exits the main loop of the application.
         /// </summary>
-        /// <since_tizen> 3 </since_tizen>
         public override void Exit()
         {
             window.Exit();

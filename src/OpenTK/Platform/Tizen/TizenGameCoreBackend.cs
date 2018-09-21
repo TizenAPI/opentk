@@ -32,7 +32,10 @@ namespace OpenTK.Platform.Tizen
 {
     internal class TizenGameCoreBackend : DefaultCoreBackend
     {
-        internal readonly static string WindowCreationEventType = "WindowCreation";
+        internal static readonly string InternalCreateEventType = "_TGCB_CREATE_EVENT_TYPE_";
+        internal static readonly string InternalTerminateEventType = "_TGCB_TERMINATE_EVENT_TYPE_";
+        internal static readonly string InternalResumeEventType = "_TGCB_RESUME_EVENT_TYPE_";
+        internal static readonly string InternalPauseEventType = "_TGCB_PAUSE_EVENT_TYPE_";
 
         private readonly SDL2.EventFilter EventFilterDelegate_GCUnsafe;
         private readonly IntPtr EventFilterDelegate;
@@ -82,9 +85,9 @@ namespace OpenTK.Platform.Tizen
                 handler?.Invoke();
             }
 
-            if (Handlers.ContainsKey(WindowCreationEventType))
+            if (Handlers.ContainsKey(InternalCreateEventType))
             {
-                var handler = Handlers[WindowCreationEventType] as Action;
+                var handler = Handlers[InternalCreateEventType] as Action;
                 handler?.Invoke();
             }
 
@@ -147,6 +150,12 @@ namespace OpenTK.Platform.Tizen
                 var handler = Handlers[EventType.Terminated] as Action;
                 handler?.Invoke();
             }
+
+            if (Handlers.ContainsKey(InternalTerminateEventType))
+            {
+                var handler = Handlers[InternalTerminateEventType] as Action;
+                handler?.Invoke();
+            }
         }
 
         private void OnAppControlNative(IntPtr appControlHandle)
@@ -164,6 +173,12 @@ namespace OpenTK.Platform.Tizen
 
         private void OnResumeNative()
         {
+            if (Handlers.ContainsKey(InternalResumeEventType))
+            {
+                var handler = Handlers[InternalResumeEventType] as Action;
+                handler?.Invoke();
+            }
+
             if (Handlers.ContainsKey(EventType.Resumed))
             {
                 var handler = Handlers[EventType.Resumed] as Action;
@@ -173,6 +188,12 @@ namespace OpenTK.Platform.Tizen
 
         private void OnPauseNative()
         {
+            if (Handlers.ContainsKey(InternalPauseEventType))
+            {
+                var handler = Handlers[InternalPauseEventType] as Action;
+                handler?.Invoke();
+            }
+
             if (Handlers.ContainsKey(EventType.Paused))
             {
                 var handler = Handlers[EventType.Paused] as Action;
