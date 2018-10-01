@@ -100,7 +100,9 @@ namespace OpenTK.Platform.SDL2
                     handle = SDL.CreateWindow(title, bounds.Left + x, bounds.Top + y, width, height, flags);
                     exists = true;
                 }
+#if !TIZEN
                 ProcessEvents();
+#endif
                 window = new Sdl2WindowInfo(handle, null);
                 window_id = SDL.GetWindowID(handle);
                 windows.Add(window_id, this);

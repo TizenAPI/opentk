@@ -49,6 +49,8 @@ namespace OpenTK.Platform.Tizen
 
         public override void Run(string[] args)
         {
+            base.Run(args);
+
             lock (SDL2.SDL.Sync)
             {
                 SDL2.SDL.AddEventWatch(EventFilterDelegate, IntPtr.Zero);
@@ -77,7 +79,7 @@ namespace OpenTK.Platform.Tizen
             }
         }
 
-        private bool OnCreateNative()
+        private void OnCreateNative()
         {
             if (Handlers.ContainsKey(EventType.PreCreated))
             {
@@ -96,7 +98,6 @@ namespace OpenTK.Platform.Tizen
                 var handler = Handlers[EventType.Created] as Action;
                 handler?.Invoke();
             }
-            return true;
         }
 
         private unsafe int OnHandleSDLAppEvent(IntPtr data, IntPtr e)
