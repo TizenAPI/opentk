@@ -97,6 +97,7 @@ namespace OpenTK.Platform.SDL2
                 IntPtr handle;
                 lock (SDL.Sync)
                 {
+                    Console.Error.WriteLine($"Window Bound: [{bounds.Left + x}, {bounds.Top + y}, {width}, {height}]");
                     handle = SDL.CreateWindow(title, bounds.Left + x, bounds.Top + y, width, height, flags);
                     exists = true;
                 }

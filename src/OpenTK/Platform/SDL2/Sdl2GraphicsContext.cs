@@ -77,16 +77,17 @@ namespace OpenTK.Platform.SDL2
                 if (SdlContext == ContextHandle.Zero)
                 {
                     var error = SDL.GetError();
-                    Debug.Print("SDL2 failed to create OpenGL context: {0}", error);
+                    Console.Error.WriteLine("SDL2 failed to create OpenGL context: {0}", error);
                     throw new GraphicsContextException(error);
                 }
 
                 Mode = GetGLAttributes(SdlContext, out flags);
             }
             Handle = GraphicsContext.GetCurrentContext();
-            Debug.Print("SDL2 created GraphicsContext (handle: {0})", Handle);
-            Debug.Print("    GraphicsMode: {0}", Mode);
-            Debug.Print("    GraphicsContextFlags: {0}", flags);
+            Console.Error.WriteLine("SDL2 created GraphicsContext (handle: {0})", Handle);
+            Console.Error.WriteLine("    Requested GraphicsMode: {0}", mode);
+            Console.Error.WriteLine("    Applied GraphicsMode: {0}", Mode);
+            Console.Error.WriteLine("    GraphicsContextFlags: {0}", flags);
         }
 
         private static GraphicsMode GetGLAttributes(ContextHandle sdlContext, out GraphicsContextFlags context_flags)

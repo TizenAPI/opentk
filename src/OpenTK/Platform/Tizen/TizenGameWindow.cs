@@ -36,7 +36,12 @@ namespace OpenTK.Platform.Tizen
         }
 
         public TizenGameWindow(GraphicsMode mode, DisplayDevice device, int major, int minor)
-            : base(device.Width, device.Height, mode, "", GameWindowFlags.FixedWindow, device, major, minor, GraphicsContextFlags.Embedded)
+            : this(GraphicsMode.Default, DisplayDevice.Default, "", 2, 0)
+        {
+        }
+
+        public TizenGameWindow(GraphicsMode mode, DisplayDevice device, string title, int major, int minor)
+            : base(device.Width, device.Height, mode, title, GameWindowFlags.FixedWindow, device, major, minor, GraphicsContextFlags.Embedded)
         {
             SDL2.SDL.SetHint("SDL_IOS_ORIENTATIONS", "Portrait LandscapeLeft LandscapeRight PortraitUpsideDown");
             Paused = false;

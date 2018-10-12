@@ -25,6 +25,9 @@
 
 using Tizen.Applications;
 
+using OpenTK.Graphics;
+using OpenTK.Platform.SDL2;
+
 namespace OpenTK.Platform.Tizen
 {
     /// <summary>
@@ -112,14 +115,16 @@ namespace OpenTK.Platform.Tizen
         public void Run(string[] args, double updatesPerSecond, double framesPerSecond)
         {
             // Initialize SDL2
-            SDL2.SDL.TizenAppInit(args.Length, args);
-            SDL2.SDL.SetMainReady();
+            SDL.TizenAppInit(args.Length, args);
+            SDL.SetMainReady();
             Toolkit.Init();
 
             // Set Internal Event Handlers
             Backend.AddEventHandler(TizenGameCoreBackend.InternalCreateEventType, () =>
             {
-                window = new TizenGameWindow(GraphicsMode, DisplayDevice.Default, GLMajor, GLMinor);
+                // In Tizen SDL Backend, GL Attributes should be set before creating the window.
+                SetGLAttributes(GraphicsMode, GLMajor, GLMinor);
+                window = new TizenGameWindow(GraphicsMode, DisplayDevice.Default, Current.ApplicationInfo.ExecutablePath, GLMajor, GLMinor);
             });
 
             Backend.AddEventHandler(TizenGameCoreBackend.InternalTerminateEventType, () =>
@@ -151,6 +156,75 @@ namespace OpenTK.Platform.Tizen
         public override void Exit()
         {
             window.Exit();
+        }
+
+        private static void SetGLAttributes(GraphicsMode mode, int major, int minor)
+        {
+            SDL.GL.SetAttribute(ContextAttribute.ACCUM_ALPHA_SIZE, 0);
+            SDL.GL.SetAttribute(ContextAttribute.ACCUM_RED_SIZE, 0);
+            SDL.GL.SetAttribute(ContextAttribute.ACCUM_GREEN_SIZE, 0);
+            SDL.GL.SetAttribute(ContextAttribute.ACCUM_BLUE_SIZE, 0);
+            SDL.GL.SetAttribute(ContextAttribute.DOUBLEBUFFER, 0);
+            SDL.GL.SetAttribute(ContextAttribute.ALPHA_SIZE, 0);
+            SDL.GL.SetAttribute(ContextAttribute.RED_SIZE, 0);
+            SDL.GL.SetAttribute(ContextAttribute.GREEN_SIZE, 0);
+            SDL.GL.SetAttribute(ContextAttribute.BLUE_SIZE, 0);
+            SDL.GL.SetAttribute(ContextAttribute.DEPTH_SIZE, 0);
+            SDL.GL.SetAttribute(ContextAttribute.MULTISAMPLEBUFFERS, 0);
+            SDL.GL.SetAttribute(ContextAttribute.MULTISAMPLESAMPLES, 0);
+            SDL.GL.SetAttribute(ContextAttribute.STENCIL_SIZE, 0);
+            SDL.GL.SetAttribute(ContextAttribute.STEREO, 0);
+
+            if (mode.AccumulatorFormat.BitsPerPixel > 0)
+            {
+                SDL.GL.SetAttribute(ContextAttribute.ACCUM_ALPHA_SIZE, mode.AccumulatorFormat.Alpha);
+                SDL.GL.SetAttribute(ContextAttribute.ACCUM_RED_SIZE, mode.AccumulatorFormat.Red);
+                SDL.GL.SetAttribute(ContextAttribute.ACCUM_GREEN_SIZE, mode.AccumulatorFormat.Green);
+                SDL.GL.SetAttribute(ContextAttribute.ACCUM_BLUE_SIZE, mode.AccumulatorFormat.Blue);
+            }
+
+            if (mode.Buffers > 0)
+            {
+                SDL.GL.SetAttribute(ContextAttribute.DOUBLEBUFFER, mode.Buffers > 1 ? 1 : 0);
+            }
+
+            if (mode.ColorFormat > 0)
+            {
+                SDL.GL.SetAttribute(ContextAttribute.ALPHA_SIZE, mode.ColorFormat.Alpha);
+                SDL.GL.SetAttribute(ContextAttribute.RED_SIZE, mode.ColorFormat.Red);
+                SDL.GL.SetAttribute(ContextAttribute.GREEN_SIZE, mode.ColorFormat.Green);
+                SDL.GL.SetAttribute(ContextAttribute.BLUE_SIZE, mode.ColorFormat.Blue);
+            }
+
+            if (mode.Depth > 0)
+            {
+                SDL.GL.SetAttribute(ContextAttribute.DEPTH_SIZE, mode.Depth);
+            }
+
+            if (mode.Samples > 0)
+            {
+                SDL.GL.SetAttribute(ContextAttribute.MULTISAMPLEBUFFERS, 1);
+                SDL.GL.SetAttribute(ContextAttribute.MULTISAMPLESAMPLES, mode.Samples);
+            }
+
+            if (mode.Stencil > 0)
+            {
+                SDL.GL.SetAttribute(ContextAttribute.STENCIL_SIZE, 1);
+            }
+
+            if (mode.Stereo)
+            {
+                SDL.GL.SetAttribute(ContextAttribute.STEREO, 1);
+            }
+
+            if (major > 0)
+            {
+                SDL.GL.SetAttribute(ContextAttribute.CONTEXT_MAJOR_VERSION, major);
+                SDL.GL.SetAttribute(ContextAttribute.CONTEXT_MINOR_VERSION, minor);
+            }
+
+            SDL.GL.SetAttribute(ContextAttribute.CONTEXT_EGL, 1);
+            SDL.GL.SetAttribute(ContextAttribute.CONTEXT_PROFILE_MASK, ContextProfileFlags.ES);
         }
     }
 }
