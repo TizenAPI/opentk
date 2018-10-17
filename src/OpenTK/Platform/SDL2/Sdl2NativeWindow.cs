@@ -78,6 +78,7 @@ namespace OpenTK.Platform.SDL2
                 var flags = TranslateFlags(options);
                 flags |= WindowFlags.OPENGL;
                 flags |= WindowFlags.HIDDEN;
+
                 if (Toolkit.Options.EnableHighResolution)
                 {
                     flags |= WindowFlags.ALLOW_HIGHDPI;
@@ -124,6 +125,10 @@ namespace OpenTK.Platform.SDL2
                 {
                     windowFlags |= WindowFlags.FULLSCREEN;
                 }
+#if TIZEN
+                // disable SDL indicator
+                windowFlags |= WindowFlags.BORDERLESS;
+#endif
             }
 
             if ((flags & GameWindowFlags.FixedWindow) == 0)
