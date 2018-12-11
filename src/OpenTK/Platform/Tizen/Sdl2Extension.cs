@@ -76,6 +76,10 @@ namespace OpenTK.Platform.SDL2
         public static extern bool SDL_Tizen_GetWindowAcceptFocus(IntPtr window);
 
         [SuppressUnmanagedCodeSecurity]
+        [DllImport(lib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_Tizen_GetNativeWindow", ExactSpelling = true)]
+        public static extern IntPtr SDL_Tizen_GetNativeWindow(IntPtr window);
+
+        [SuppressUnmanagedCodeSecurity]
         [DllImport(lib, CallingConvention = CallingConvention.Cdecl, EntryPoint = "SDL_SetWindowOpacity", ExactSpelling = true)]
         public static extern int SDL_SetWindowOpacity(IntPtr window, float opacity);
 

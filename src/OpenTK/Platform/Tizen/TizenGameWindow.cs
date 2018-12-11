@@ -77,6 +77,14 @@ namespace OpenTK.Platform.Tizen
             }
         }
 
+        public IntPtr NativeHandle
+        {
+            get
+            {
+                return SDL2.SDL.SDL_Tizen_GetNativeWindow(WindowInfo.Handle);
+            }
+        }
+
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
             if (!Paused)
@@ -117,5 +125,6 @@ namespace OpenTK.Platform.Tizen
         {
             return SDL2.SDL.SDL_Tizen_AddAuxiliaryHint(WindowInfo.Handle, hint, value);
         }
+
     }
 }
