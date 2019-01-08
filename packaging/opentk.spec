@@ -50,36 +50,22 @@ cp %{SOURCE1} .
 %install
 
 %define DOTNET_ASSEMBLY_PATH /usr/share/dotnet.tizen/framework
-%define DOTNET_ASSEMBLY_DRAFT_PATH /usr/share/dotnet.tizen/framework/draft
 
-mkdir -p %{buildroot}%{DOTNET_ASSEMBLY_DRAFT_PATH}
+mkdir -p %{buildroot}%{DOTNET_ASSEMBLY_PATH}
 
-install -p -m 644 artifacts/bin/OpenTK.dll %{buildroot}%{DOTNET_ASSEMBLY_DRAFT_PATH}
-install -p -m 644 artifacts/bin/OpenTK.pdb %{buildroot}%{DOTNET_ASSEMBLY_DRAFT_PATH}
+install -p -m 644 artifacts/bin/OpenTK.dll %{buildroot}%{DOTNET_ASSEMBLY_PATH}
+install -p -m 644 artifacts/bin/OpenTK.pdb %{buildroot}%{DOTNET_ASSEMBLY_PATH}
 
-mkdir -p %{buildroot}/nuget/draft
-install -p -m 644 artifacts/OpenTK.*.nupkg %{buildroot}/nuget/draft
-
-
-%post
-rm -f %{DOTNET_ASSEMBLY_PATH}/OpenTK.dll
-cp -a %{DOTNET_ASSEMBLY_DRAFT_PATH}/OpenTK.dll %{DOTNET_ASSEMBLY_PATH}/OpenTK.dll
-
-%post debug
-rm -f %{DOTNET_ASSEMBLY_PATH}/OpenTK.pdb
-cp -a %{DOTNET_ASSEMBLY_DRAFT_PATH}/OpenTK.pdb %{DOTNET_ASSEMBLY_PATH}/OpenTK.pdb
-
-%post nuget
-rm -f /nuget/OpenTK.*.nupkg
-cp -a /nuget/draft/OpenTK.*.nupkg /nuget/
+mkdir -p %{buildroot}/nuget
+install -p -m 644 artifacts/OpenTK.*.nupkg %{buildroot}/nuget
 
 %files
 %license License.txt
 %manifest %{name}.manifest
-%attr(644,root,root) %{DOTNET_ASSEMBLY_DRAFT_PATH}/*.dll
+%attr(644,root,root) %{DOTNET_ASSEMBLY_PATH}/*.dll
 
 %files nuget
-%attr(644,root,root) /nuget/draft/*.nupkg
+%attr(644,root,root) /nuget/*.nupkg
 
 %files debug
-%attr(644,root,root) %{DOTNET_ASSEMBLY_DRAFT_PATH}/*.pdb
+%attr(644,root,root) %{DOTNET_ASSEMBLY_PATH}/*.pdb
