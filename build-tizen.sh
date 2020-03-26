@@ -9,7 +9,7 @@ PROJECT_BIND=$SCRIPT_DIR/src/Generator.Bind/Generator.Bind.NETCore.csproj
 PROJECT_REWRITE=$SCRIPT_DIR/src/Generator.Rewrite/Generator.Rewrite.NETCore.csproj
 PROJECT_OPENTK=$SCRIPT_DIR/src/OpenTK/OpenTK.Tizen.csproj
 
-BIND_EXE="dotnet $SCRIPT_DIR/src/Generator.Bind/bin/$CONFIGURATION/netcoreapp2.0/Bind.dll"
+BIND_EXE="dotnet $SCRIPT_DIR/src/Generator.Bind/bin/$CONFIGURATION/netcoreapp3.0/Bind.dll"
 
 ARTIFACTS_DIR=$SCRIPT_DIR/artifacts
 

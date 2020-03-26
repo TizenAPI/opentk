@@ -82,7 +82,7 @@
 
     <!-- Rewrite OpenTK.dll -->
     <PropertyGroup>
-      <RewriteCmd>dotnet ../Generator.Rewrite/bin/$(Configuration)/netcoreapp2.0/Generator.Rewrite.dll</RewriteCmd>
+      <RewriteCmd>dotnet ../Generator.Rewrite/bin/$(Configuration)/netcoreapp3.0/Generator.Rewrite.dll</RewriteCmd>
       <DebugOpt Condition="'$(Configuration)' == 'Debug'">--debug</DebugOpt>
     </PropertyGroup>
     <Exec Command="$(RewriteCmd) --assembly $(TargetPath) --dllimport $(DebugOpt)" />
