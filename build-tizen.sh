@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 SCRIPT_FILE=$(readlink -f $0)
 SCRIPT_DIR=$(dirname $SCRIPT_FILE)
@@ -54,9 +54,7 @@ clean() {
 
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true
 
-cmd=$1; shift
-
-if [ "x$cmd" == "xclean" ]; then
+if [ "x$1" == "xclean" ]; then
   clean
 else
   build
