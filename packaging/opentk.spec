@@ -1,6 +1,6 @@
 Name:       opentk
 Summary:    C# binding for OpenGL, OpenGL ES
-Version:    3.0.3
+Version:    3.0.4
 Release:    1
 Group:      Development/Libraries
 License:    MIT

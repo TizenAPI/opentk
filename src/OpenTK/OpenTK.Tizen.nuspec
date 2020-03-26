@@ -18,10 +18,15 @@
       <group targetFramework="Tizen5.0">
         <dependency id="Tizen.NET" version="$fxversion$" />
       </group>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="Tizen.NET" version="$fxversion$" />
+      </group>
     </dependencies>
   </metadata>
   <files>
     <file src="bin\$configuration$\netstandard2.0\ref\OpenTK.dll" target="ref\tizen50" />
     <file src="bin\$configuration$\netstandard2.0\OpenTK.xml" target="ref\tizen50" />
+    <file src="bin\$configuration$\netstandard2.0\ref\OpenTK.dll" target="ref\netstandard2.0" />
+    <file src="bin\$configuration$\netstandard2.0\OpenTK.xml" target="ref\netstandard2.0" />
   </files>
 </package>
